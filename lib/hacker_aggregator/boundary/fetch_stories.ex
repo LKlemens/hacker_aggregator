@@ -11,9 +11,40 @@ defmodule HackerAggregator.Boundary.FetchStories do
     |> http_get(&parse_story/1, "No story found")
   end
 
+  def get_list(n) do
+    list =
+      case fetch_top_stories() do
+        {:ok, list} ->
+          list
+
+        {:error, msg} ->
+          IO.inspect("ERROR: fetching list of stories", msg)
+          []
+      end
+
+    list
+    |> Stream.map(&handle_story(&1))
+    |> Stream.filter(&(&1 != %{}))
+    |> Stream.take(n)
+    |> Enum.to_list()
+  end
+
   ###########
   # PRIVATE
   ###########
+
+  defp handle_story(story_id) do
+    story = fetch_story(story_id)
+
+    case story do
+      {:ok, story_struct} ->
+        story_struct
+
+      {:error, data} ->
+        IO.inspect("ERROR: when parsing story", data)
+        %{}
+    end
+  end
 
   defp parse_story(story_id) do
     with {:ok, %{} = story_data} <-
