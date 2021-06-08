@@ -1,4 +1,7 @@
 defmodule HackerAggregator do
+  alias HackerAggregator.Core.Story
+  require Logger
+
   @moduledoc """
   HackerAggregator keeps the contexts that define your domain
   and business logic.
@@ -14,7 +17,7 @@ defmodule HackerAggregator do
           list
 
         {:error, msg} ->
-          IO.inspect("ERROR: fetching list of stories", msg)
+          Logger.error("fetching list of stories failed: #{inspect(msg)}")
           []
       end
 
@@ -39,7 +42,7 @@ defmodule HackerAggregator do
         story_struct
 
       {:error, data} ->
-        IO.inspect("ERROR: when parsing story", data)
+        Logger.error("get a story: #{inspect(data)}")
         %{}
     end
   end

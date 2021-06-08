@@ -1,10 +1,13 @@
 defmodule HackerAggregator.Core.HackerNewsApi.ResponseParser do
+  require Logger
+
   def parse_story({:ok, story_data}) do
     story_data
     |> from_map()
   end
 
   def parse_story(data) do
+    Logger.error("Invalid data passed to ResponseParser: #{inspect(data)}")
     {:error, %{msg: "bad input provided", data: data}}
   end
 
@@ -12,6 +15,7 @@ defmodule HackerAggregator.Core.HackerNewsApi.ResponseParser do
   # PRIVATE
   ###########
 
+  # TODO: refactor from_map
   defp from_map(%{"url" => _} = story_data) do
     with %{
            "by" => by,
@@ -55,6 +59,7 @@ defmodule HackerAggregator.Core.HackerNewsApi.ResponseParser do
   end
 
   defp from_map(undefined) do
+    Logger.error("Invalid story passed to ResponseParser: #{inspect(undefined)}")
     {:error, %{msg: "invalid argument", data: undefined}}
   end
 end
