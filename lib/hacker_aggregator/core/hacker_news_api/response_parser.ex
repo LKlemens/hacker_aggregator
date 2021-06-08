@@ -57,4 +57,8 @@ defmodule HackerAggregator.Core.HackerNewsApi.ResponseParser do
       data -> {:error, %{msg: "story has no all required keys", data: data}}
     end
   end
+
+  defp from_map(undefined) do
+    {:error, %{msg: "invalid argument", data: undefined}}
+  end
 end
