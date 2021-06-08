@@ -16,7 +16,6 @@ defmodule HackerAggregator.Core.HackerNewsApi.ResponseParser do
     with %{
            "by" => by,
            "id" => id,
-           "score" => score,
            "title" => title,
            "type" => type = "story",
            "url" => url
@@ -25,7 +24,6 @@ defmodule HackerAggregator.Core.HackerNewsApi.ResponseParser do
        struct(HackerAggregator.Core.Story,
          by: by,
          id: id,
-         score: score,
          title: title,
          url: url,
          type: type
@@ -39,7 +37,6 @@ defmodule HackerAggregator.Core.HackerNewsApi.ResponseParser do
     with %{
            "by" => by,
            "id" => id,
-           "score" => score,
            "title" => title,
            "type" => type = "story",
            "text" => text
@@ -48,7 +45,6 @@ defmodule HackerAggregator.Core.HackerNewsApi.ResponseParser do
        struct(HackerAggregator.Core.Story,
          by: by,
          id: id,
-         score: score,
          title: title,
          text: text,
          type: type
