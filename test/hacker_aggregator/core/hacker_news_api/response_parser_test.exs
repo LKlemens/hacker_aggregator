@@ -1,5 +1,6 @@
 defmodule HackerAggregator.Core.HackerNewsApi.ResponseParserTest do
   use ExUnit.Case, async: true
+  import ExUnit.CaptureLog
   alias HackerAggregator.Core.HackerNewsApi.ResponseParser
   alias HackerAggregator.Core.Story
 
@@ -59,8 +60,12 @@ defmodule HackerAggregator.Core.HackerNewsApi.ResponseParserTest do
          %{
            incomplete_story: {:ok, story} = response
          } do
-      assert {:error, %{msg: "invalid argument", data: ^story}} =
-               ResponseParser.parse_story(response)
+      assert capture_log([level: :error], fn ->
+               assert(
+                 {:error, %{msg: "invalid argument", data: ^story}} =
+                   ResponseParser.parse_story(response)
+               )
+             end) =~ "[error] Invalid story passed to ResponseParser"
     end
 
     test "error: forward a bad type of story, returns error tuple",
@@ -75,8 +80,10 @@ defmodule HackerAggregator.Core.HackerNewsApi.ResponseParserTest do
          %{
            error_response: response
          } do
-      assert {:error, %{msg: "bad input provided", data: ^response}} =
-               ResponseParser.parse_story(response)
+      assert capture_log([level: :error], fn ->
+               assert {:error, %{msg: "bad input provided", data: ^response}} =
+                        ResponseParser.parse_story(response)
+             end) =~ "[error] Invalid data passed to ResponseParser"
     end
   end
 end
