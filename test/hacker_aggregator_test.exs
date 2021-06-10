@@ -12,6 +12,22 @@ defmodule HackerAggregatorTest do
 
   test "success: pass N number, get N stories" do
     num = Enum.random(1..10)
+    {:ok, list_of_stories_is} = fetch_top_stories_mock()
+
+    HackerAggregator.MockHackerNewsApi
+    |> expect(:fetch_top_stories, 1, fn ->
+      {:ok, list_of_stories_is}
+    end)
+
+    HackerAggregator.MockHackerNewsApi
+    |> expect(:fetch_story, num, fn _ ->
+      story =
+        File.read!("test/support/url_story_response.json")
+        |> Jason.decode!()
+
+      {:ok, story}
+    end)
+
     list = HackerAggregator.get_list(num)
     assert length(list) == num
   end

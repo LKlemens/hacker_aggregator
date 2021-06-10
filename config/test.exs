@@ -10,4 +10,4 @@ config :hacker_aggregator, HackerAggregatorWeb.Endpoint,
 config :logger, level: :warn
 
 # NoOpHackerNewsApi for tests
-config :hacker_aggregator, :hacker_news_api, HackerAggregator.Boundary.NoOpHackerNewsApi
+config :hacker_aggregator, :hacker_news_api, HackerAggregator.MockHackerNewsApi
