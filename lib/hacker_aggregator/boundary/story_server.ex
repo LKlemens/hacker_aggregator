@@ -86,7 +86,7 @@ defmodule HackerAggregator.Boundary.StoryServer do
 
   @spec fetch_stories() :: {:stories, list()}
   defp fetch_stories() do
-    list = HackerAggregator.get_list(@number_of_stories)
+    list = HackerAggregator.Boundary.FetchStories.get_list(@number_of_stories)
     schedule_work()
     {:stories, list}
   end

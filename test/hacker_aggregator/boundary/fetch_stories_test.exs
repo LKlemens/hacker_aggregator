@@ -1,4 +1,4 @@
-defmodule HackerAggregatorTest do
+defmodule HackerAggregator.Boundary.FetchStoriesTest do
   use ExUnit.Case, async: true
   import Mox
   import ExUnit.CaptureLog
@@ -28,7 +28,7 @@ defmodule HackerAggregatorTest do
       {:ok, story}
     end)
 
-    list = HackerAggregator.get_list(num)
+    list = HackerAggregator.Boundary.FetchStories.get_list(num)
     assert length(list) == num
   end
 
@@ -47,7 +47,12 @@ defmodule HackerAggregatorTest do
 
     log =
       capture_log([level: :error], fn ->
-        list = HackerAggregator.get_list(num, HackerAggregator.MockHackerNewsApi)
+        list =
+          HackerAggregator.Boundary.FetchStories.get_list(
+            num,
+            HackerAggregator.MockHackerNewsApi
+          )
+
         assert length(list) == 0
       end)
 
@@ -66,7 +71,12 @@ defmodule HackerAggregatorTest do
 
     log =
       capture_log([level: :error], fn ->
-        list = HackerAggregator.get_list(12, HackerAggregator.MockHackerNewsApi)
+        list =
+          HackerAggregator.Boundary.FetchStories.get_list(
+            12,
+            HackerAggregator.MockHackerNewsApi
+          )
+
         assert list == []
       end)
 
@@ -76,13 +86,23 @@ defmodule HackerAggregatorTest do
   @tag :real_api
   test "[real_api] success: pass N number, get N stories" do
     num = Enum.random(1..10)
-    list = HackerAggregator.get_list(num, HackerAggregator.Boundary.HackerNewsApi)
+
+    list =
+      HackerAggregator.Boundary.FetchStories.get_list(
+        num,
+        HackerAggregator.Boundary.HackerNewsApi
+      )
+
     assert length(list) == num
   end
 
   @tag :real_api
   test "[real_api] success:  pass 1, get 1 valid story struct" do
-    [story] = HackerAggregator.get_list(1, HackerAggregator.Boundary.HackerNewsApi)
+    [story] =
+      HackerAggregator.Boundary.FetchStories.get_list(
+        1,
+        HackerAggregator.Boundary.HackerNewsApi
+      )
 
     assert %Story{by: _, id: _, title: _, text: _, url: _} = story
   end
