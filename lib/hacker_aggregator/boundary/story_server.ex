@@ -3,6 +3,9 @@ defmodule HackerAggregator.Boundary.StoryServer do
 
   require Logger
 
+  @number_of_stories 50
+  @seconds 300
+
   ###############
   ##### API #####
   ###############
@@ -78,12 +81,12 @@ defmodule HackerAggregator.Boundary.StoryServer do
   ###########
 
   defp schedule_work() do
-    Process.send_after(__MODULE__, :fetch, :timer.seconds(300))
+    Process.send_after(__MODULE__, :fetch, :timer.seconds(@seconds))
   end
 
   @spec fetch_stories() :: {:stories, list()}
   defp fetch_stories() do
-    list = HackerAggregator.get_list(50)
+    list = HackerAggregator.get_list(@number_of_stories)
     schedule_work()
     {:stories, list}
   end
