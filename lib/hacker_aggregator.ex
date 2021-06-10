@@ -1,5 +1,4 @@
 defmodule HackerAggregator do
-  alias HackerAggregator.Core.Story
   require Logger
 
   @moduledoc """
@@ -10,9 +9,15 @@ defmodule HackerAggregator do
   if it comes from the database, an external API or others.
   """
 
-  def get_list(n) do
+  @hacker_news_api Application.get_env(
+                     :hacker_aggregator,
+                     :hacker_news_api,
+                     HackerAggregator.Boundary.HackerNewsApi
+                   )
+
+  def get_list(n, hacker_news_api \\ @hacker_news_api) do
     list =
-      case HackerAggregator.Boundary.HackerNewsApi.fetch_top_stories() do
+      case hacker_news_api.fetch_top_stories() do
         {:ok, list} ->
           list
 
@@ -22,7 +27,7 @@ defmodule HackerAggregator do
       end
 
     list
-    |> Stream.map(&get_story(&1))
+    |> Stream.map(&get_story(&1, hacker_news_api))
     |> Stream.filter(&(&1 != %{}))
     |> Stream.take(n)
     |> Enum.to_list()
@@ -32,9 +37,9 @@ defmodule HackerAggregator do
   # PRIVATE
   ###########
 
-  defp get_story(story_id) do
+  defp get_story(story_id, hacker_news_api) do
     story =
-      HackerAggregator.Boundary.HackerNewsApi.fetch_story(story_id)
+      hacker_news_api.fetch_story(story_id)
       |> HackerAggregator.Core.HackerNewsApi.ResponseParser.parse_story()
 
     case story do
