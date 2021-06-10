@@ -1,6 +1,7 @@
 defmodule HackerAggregator.Boundary.NoOpHackerNewsApi do
   @behaviour HackerAggregator.Boundary.HackerNewsApi.Behaviour
 
+  @impl HackerAggregator.Boundary.HackerNewsApi.Behaviour
   @spec fetch_top_stories() :: {:ok, list()} | {:error, term()}
   def fetch_top_stories() do
     list =
@@ -10,6 +11,7 @@ defmodule HackerAggregator.Boundary.NoOpHackerNewsApi do
     {:ok, list}
   end
 
+  @impl HackerAggregator.Boundary.HackerNewsApi.Behaviour
   @spec fetch_story(story_id :: integer()) :: {:ok, map()} | {:error, term()}
   def fetch_story(_story_id) do
     story =

@@ -81,12 +81,14 @@ defmodule HackerAggregator.Boundary.StoryServer do
     Process.send_after(__MODULE__, :fetch, :timer.seconds(300))
   end
 
+  @spec fetch_stories() :: {:stories, list()}
   defp fetch_stories() do
     list = HackerAggregator.get_list(50)
     schedule_work()
     {:stories, list}
   end
 
+  @spec insert_story(story :: struct()) :: nil | true | list()
   def insert_story(story) do
     if new_story?(story) do
       :ets.insert(:stories, {System.system_time(:microsecond), story})

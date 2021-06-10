@@ -15,7 +15,8 @@ defmodule HackerAggregator do
                      HackerAggregator.Boundary.HackerNewsApi
                    )
 
-  def get_list(n, hacker_news_api \\ @hacker_news_api) do
+  @spec get_list(number_of_stories :: integer(), hacker_news_api :: module()) :: list()
+  def get_list(number_of_stories, hacker_news_api \\ @hacker_news_api) do
     list =
       case hacker_news_api.fetch_top_stories() do
         {:ok, list} ->
@@ -29,7 +30,7 @@ defmodule HackerAggregator do
     list
     |> Stream.map(&get_story(&1, hacker_news_api))
     |> Stream.filter(&(&1 != %{}))
-    |> Stream.take(n)
+    |> Stream.take(number_of_stories)
     |> Enum.to_list()
   end
 
@@ -37,6 +38,7 @@ defmodule HackerAggregator do
   # PRIVATE
   ###########
 
+  @spec get_story(story_id :: integer(), hacker_news_api :: module()) :: map()
   defp get_story(story_id, hacker_news_api) do
     story =
       hacker_news_api.fetch_story(story_id)
