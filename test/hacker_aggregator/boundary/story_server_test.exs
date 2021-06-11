@@ -21,7 +21,7 @@ defmodule HackerAggregator.Boundary.StoryServerTest do
     %{list: list_of_stories_ids, story: story}
   end
 
-  test "success: returns list of tuples with timestamp and stories after start", %{
+  test "success: returns list of stories after start", %{
     list: list_of_stories_ids,
     story: story
   } do
@@ -40,7 +40,7 @@ defmodule HackerAggregator.Boundary.StoryServerTest do
 
     list = StoryServer.get_stories()
     assert length(list) == 1
-    assert {_timeout, %Story{by: _, id: _, title: _, text: _, url: _}} = Enum.at(list, 0)
+    assert %Story{by: _, id: _, title: _, text: _, url: _} = Enum.at(list, 0)
 
     capture_log([level: :warn], fn ->
       stop_supervised!(StoryServer)

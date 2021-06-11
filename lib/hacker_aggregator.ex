@@ -18,7 +18,6 @@ defmodule HackerAggregator do
   @spec get_page(page_number :: integer()) :: %Pagination{}
   def get_page(page_number) do
     HackerAggregator.Boundary.StoryServer.get_stories()
-    |> Enum.map(fn {_timestamp, story} -> story end)
     |> Pagination.new(page_number: page_number)
   end
 
@@ -26,13 +25,11 @@ defmodule HackerAggregator do
   def get_story() do
     HackerAggregator.Boundary.StoryServer.get_stories()
     |> Enum.random()
-    |> elem(1)
   end
 
   @spec get_story(id :: integer()) :: %Story{}
   def get_story(id) do
     HackerAggregator.Boundary.StoryServer.get_stories()
-    |> Enum.find(fn {_timestamp, story} -> story.id == id end)
-    |> elem(1)
+    |> Enum.find(&(&1.id == id))
   end
 end

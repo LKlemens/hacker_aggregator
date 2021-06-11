@@ -1,6 +1,8 @@
 defmodule HackerAggregator.Boundary.StoryServer do
   use GenServer
 
+  alias HackerAggregator.Core.Story
+
   require Logger
 
   @number_of_stories 50
@@ -10,7 +12,7 @@ defmodule HackerAggregator.Boundary.StoryServer do
   ##### API #####
   ###############
 
-  def start_link(_) do
+  def start_link(_opt \\ nil) do
     GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
@@ -26,14 +28,12 @@ defmodule HackerAggregator.Boundary.StoryServer do
   def init(:ok) do
     Process.flag(:trap_exit, true)
     send(self(), :fetch)
-    table = :ets.new(:stories, [:ordered_set, :private, :named_table])
-    {:ok, %{table: table, pid: nil}}
+    {:ok, %{stories: [], pid: nil}}
   end
 
   @impl GenServer
   def handle_call(:get, _from, state) do
-    # TODO: find out how to take down stories in property order without reversing
-    {:reply, :ets.tab2list(:stories) |> Enum.reverse(), state}
+    {:reply, state.stories, state}
   end
 
   @impl GenServer
@@ -44,8 +44,11 @@ defmodule HackerAggregator.Boundary.StoryServer do
 
   @impl GenServer
   def handle_info({_task, {:stories, result}}, state) do
-    result
-    |> Enum.map(&insert_story/1)
+    state =
+      result
+      |> Enum.reduce(state, fn story, state ->
+        update_in(state.stories, &update_stories(story, &1))
+      end)
 
     {:noreply, state}
   end
@@ -91,14 +94,12 @@ defmodule HackerAggregator.Boundary.StoryServer do
     {:stories, list}
   end
 
-  @spec insert_story(story :: struct()) :: nil | true | list()
-  def insert_story(story) do
-    if new_story?(story) do
-      :ets.insert(:stories, {System.system_time(:microsecond), story})
+  @spec update_stories(story :: %Story{}, stories :: [%Story{}]) :: [%Story{}]
+  defp update_stories(story, stories) do
+    if Enum.member?(stories, story) do
+      stories
+    else
+      [story | stories]
     end
-  end
-
-  defp new_story?(story) do
-    :ets.match(:stories, {:_, story}) == []
   end
 end
