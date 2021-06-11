@@ -8,7 +8,7 @@ defmodule HackerAggregatorWeb.FallbackController do
     |> render(:"400")
   end
 
-  def call(conn, {num, str}) do
+  def call(conn, {_num, _str}) do
     conn
     |> put_status(400)
     |> put_view(HackerAggregatorWeb.ErrorView)
