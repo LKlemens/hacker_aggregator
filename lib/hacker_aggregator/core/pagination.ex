@@ -71,7 +71,7 @@ defmodule HackerAggregator.Core.Pagination do
     ""
   end
 
-  defimpl Jason.Encoder, for: HackerAggregator.Core.Pagination do
+  defimpl Jason.Encoder, for: __MODULE__ do
     def encode(value, opts) do
       Jason.Encode.map(
         Map.take(value, [:stories, :page_size, :page_number, :overall_pages, :error]),

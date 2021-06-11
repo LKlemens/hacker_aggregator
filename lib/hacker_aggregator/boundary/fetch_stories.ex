@@ -30,7 +30,8 @@ defmodule HackerAggregator.Boundary.FetchStories do
   # PRIVATE
   ###########
 
-  @spec get_story(story_id :: integer(), hacker_news_api :: module()) :: map()
+  @spec get_story(story_id :: integer(), hacker_news_api :: module()) ::
+          %HackerAggregator.Core.Story{} | map()
   defp get_story(story_id, hacker_news_api) do
     story =
       hacker_news_api.fetch_story(story_id)
