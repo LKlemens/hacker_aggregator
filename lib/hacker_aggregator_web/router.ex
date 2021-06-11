@@ -14,6 +14,12 @@ defmodule HackerAggregatorWeb.Router do
     plug(:accepts, ["json"])
   end
 
+  scope "/api", HackerAggregatorWeb do
+    pipe_through(:api)
+
+    resources("/stories/:page", HackerNewsController, only: [:index])
+  end
+
   scope "/", HackerAggregatorWeb do
     pipe_through(:browser)
 
