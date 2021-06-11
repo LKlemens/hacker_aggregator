@@ -7,7 +7,7 @@ config :hacker_aggregator, HackerAggregatorWeb.Endpoint,
   server: false
 
 # Print only warnings and errors during test
-config :logger, level: :warn
+config :logger, level: :error
 
 # NoOpHackerNewsApi for tests
 config :hacker_aggregator, :hacker_news_api, HackerAggregator.MockHackerNewsApi
