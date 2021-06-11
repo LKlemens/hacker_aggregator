@@ -37,6 +37,14 @@ defmodule HackerAggregatorWeb.HackerNewsControllerTest do
     "stories" => []
   }
 
+  @raw_story %{
+    "by" => "SerCe",
+    "id" => 27_390_512,
+    "text" => nil,
+    "title" => "An Unbelievable Demo",
+    "url" => "https://brendangregg.com/blog/2021-06-04/an-unbelievable-demo.html"
+  }
+
   setup [:set_mox_from_context, :verify_on_exit!]
 
   setup do
@@ -107,12 +115,21 @@ defmodule HackerAggregatorWeb.HackerNewsControllerTest do
       assert json_response(conn, 400) == "Bad Request"
     end
 
+    test "get 200 and story", %{
+      conn: conn
+    } do
+      start_supervised!({StoryServer, []})
+      Process.sleep(500)
+      conn = get(conn, Routes.hacker_news_path(conn, :index))
+      assert json_response(conn, 200) == @raw_story
+    end
+
     @tag :pending
     test "when server has no any stories , get 503 and \"No stories available now\" msg", %{
       conn: conn
     } do
       start_supervised!({StoryServer, []})
-      conn = get(conn, Routes.hacker_news_path(conn, :index, 1))
+      conn = get(conn, Routes.hacker_news_path(conn, :index))
       assert json_response(conn, 503) =~ "No stories available now"
     end
   end

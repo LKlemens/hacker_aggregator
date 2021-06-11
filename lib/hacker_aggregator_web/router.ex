@@ -18,6 +18,7 @@ defmodule HackerAggregatorWeb.Router do
     pipe_through(:api)
 
     resources("/stories/:page", HackerNewsController, only: [:index])
+    resources("/story", HackerNewsController, only: [:index])
   end
 
   scope "/", HackerAggregatorWeb do
