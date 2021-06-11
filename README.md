@@ -8,7 +8,10 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## Routes
+   * hacker_news_path  GET  /api/stories/:page                     HackerAggregatorWeb.HackerNewsController :index
+   * hacker_news_path  GET  /api/story                             HackerAggregatorWeb.HackerNewsController :index
+
 
 ## Learn more
 
