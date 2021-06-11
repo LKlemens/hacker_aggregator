@@ -9,6 +9,8 @@ defmodule HackerAggregator.Boundary.FetchStories do
 
   @spec get_list(number_of_stories :: integer(), hacker_news_api :: module()) :: list()
   def get_list(number_of_stories, hacker_news_api \\ @hacker_news_api) do
+    Logger.info("Fetching list of new stories from HackerNews")
+
     list =
       case hacker_news_api.fetch_top_stories() do
         {:ok, list} ->

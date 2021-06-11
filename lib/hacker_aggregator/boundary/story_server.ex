@@ -17,6 +17,7 @@ defmodule HackerAggregator.Boundary.StoryServer do
   end
 
   def get_stories() do
+    Logger.info("Get list of stories from StoryServer")
     GenServer.call(__MODULE__, :get)
   end
 
@@ -38,12 +39,15 @@ defmodule HackerAggregator.Boundary.StoryServer do
 
   @impl GenServer
   def handle_info(:fetch, state) do
+    Logger.info("Start fetch stories task")
     task = Task.async(&fetch_stories/0)
     {:noreply, Map.put(state, :pid, task.pid)}
   end
 
   @impl GenServer
   def handle_info({_task, {:stories, result}}, state) do
+    Logger.info("Updating StoryServer state with new stories if any")
+
     state =
       result
       |> Enum.reduce(state, fn story, state ->
