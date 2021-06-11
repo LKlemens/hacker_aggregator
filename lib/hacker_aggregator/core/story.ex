@@ -9,4 +9,13 @@ defmodule HackerAggregator.Core.Story do
           url: String.t() | nil,
           text: String.t() | nil
         }
+
+  defimpl Jason.Encoder, for: HackerAggregator.Core.Story do
+    def encode(value, opts) do
+      Jason.Encode.map(
+        Map.take(value, [:by, :id, :title, :url, :text]),
+        opts
+      )
+    end
+  end
 end
