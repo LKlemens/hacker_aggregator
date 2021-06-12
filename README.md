@@ -10,7 +10,7 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 ## Routes
    * hacker_news_path  GET  /api/stories/:page                     HackerAggregatorWeb.HackerNewsController :index
-   * hacker_news_path  GET  /api/story                             HackerAggregatorWeb.HackerNewsController :index
+   * hacker_news_path  GET  /api/story/:id                         HackerAggregatorWeb.HackerNewsController :show
 
 
 ## Learn more

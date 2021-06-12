@@ -4,6 +4,7 @@ defmodule HackerAggregatorWeb.HackerNewsControllerTest do
   import Mox
 
   alias HackerAggregator.Boundary.StoryServer
+  # TODO: try to get rid of sleep from tests
 
   @valid_response %{
     "error" => "",
@@ -115,22 +116,42 @@ defmodule HackerAggregatorWeb.HackerNewsControllerTest do
       assert json_response(conn, 400) == "Bad Request"
     end
 
-    test "get 200 and story", %{
-      conn: conn
-    } do
-      start_supervised!({StoryServer, []})
-      Process.sleep(500)
-      conn = get(conn, Routes.hacker_news_path(conn, :index))
-      assert json_response(conn, 200) == @raw_story
-    end
-
     @tag :pending
     test "when server has no any stories , get 503 and \"No stories available now\" msg", %{
       conn: conn
     } do
       start_supervised!({StoryServer, []})
-      conn = get(conn, Routes.hacker_news_path(conn, :index))
+      conn = get(conn, Routes.hacker_news_path(conn, :index, 123))
       assert json_response(conn, 503) =~ "No stories available now"
+    end
+  end
+
+  describe "show" do
+    test "get 200 and story", %{
+      conn: conn
+    } do
+      start_supervised!({StoryServer, []})
+      Process.sleep(500)
+      conn = get(conn, Routes.hacker_news_path(conn, :show, @raw_story["id"]))
+      assert json_response(conn, 200) == @raw_story
+    end
+
+    test "pass bad id, get 404 and Not Found", %{
+      conn: conn
+    } do
+      start_supervised!({StoryServer, []})
+      Process.sleep(500)
+      conn = get(conn, Routes.hacker_news_path(conn, :show, 0_000_000))
+      assert json_response(conn, 404) == "Not Found"
+    end
+
+    test "pass invalid id type, get 400 and Bad Request", %{
+      conn: conn
+    } do
+      start_supervised!({StoryServer, []})
+      Process.sleep(500)
+      conn = get(conn, Routes.hacker_news_path(conn, :show, "bad value"))
+      assert json_response(conn, 400) == "Bad Request"
     end
   end
 end

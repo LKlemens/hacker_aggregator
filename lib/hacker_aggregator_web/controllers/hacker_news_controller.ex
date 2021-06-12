@@ -15,9 +15,13 @@ defmodule HackerAggregatorWeb.HackerNewsController do
     end
   end
 
-  def index(conn, %{}) do
-    story = HackerAggregator.get_story()
-    render(conn, "index.json", story: story)
+  def show(conn, %{"id" => id}) do
+    with {id, ""} <- Integer.parse(id),
+         %{} = story <-
+           HackerAggregator.get_story(id) do
+      conn
+      |> render("show.json", story: story)
+    end
   end
 
   def validate_pagination(conn, pagination_struct) do

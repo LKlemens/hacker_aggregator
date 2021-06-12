@@ -3,7 +3,7 @@ defmodule HackerAggregatorWeb.HackerNewsView do
     pagination_struct
   end
 
-  def render("index.json", %{story: story}) do
+  def render("show.json", %{story: story}) do
     story
   end
 end
