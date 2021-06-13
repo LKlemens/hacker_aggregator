@@ -2,7 +2,7 @@ defmodule HackerAggregatorWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", HackerAggregatorWeb.RoomChannel
+  channel "stories", HackerAggregatorWeb.StoriesChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After

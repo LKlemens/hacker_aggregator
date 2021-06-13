@@ -103,6 +103,7 @@ defmodule HackerAggregator.Boundary.StoryServer do
     if Enum.member?(stories, story) do
       stories
     else
+      HackerAggregatorWeb.Endpoint.broadcast!("stories", "new_story", story)
       [story | stories]
     end
   end
